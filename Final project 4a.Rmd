@@ -4,7 +4,6 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
-    runtime: shinyrmd
     theme:
       bg: "#fff"
       fg: "#000"
