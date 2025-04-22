@@ -7,7 +7,7 @@ A **flexdashboard** that compares the safety and efficacy of abatacept conversio
 ## 📊 Live Dashboard
 
 Open the interactive dashboard here:  
-https://github.com/Wen200802/finaldashboard/blob/main/Final-project-4a.html  
+https://Wen200802.github.io/finaldashboard/Final-project-4a.html
 
 ---
 
