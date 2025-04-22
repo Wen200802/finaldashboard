@@ -29,10 +29,10 @@ https://github.com/Wen200802/finaldashboard/
 
 ## 🗂️ Data
 
-> **Confidential clinical trial data** from a prospective, intention‑to‑treat, randomized controlled study comparing abatacept conversion vs. belatacept maintenance in kidney transplant patients.  
-> - **Sample size:** 86 first‑time adult renal transplant recipients (≥18 years, any gender/race/ethnicity)  
-> - **Collection:** Scheduled blood draws for PK/PD, safety labs, HLA testing, and efficacy assessments at baseline, Month 3, 6, 9, 12, and 24  
-> - **Period:** Enrollment over 1.5 years; 24 months follow‑up; total study span ~3.5 years  
+ **Confidential clinical trial data** from a prospective, intention‑to‑treat, randomized controlled study comparing abatacept conversion vs. belatacept maintenance in kidney transplant patients.  
+ - **Sample size:** 86 first‑time adult renal transplant recipients (≥18 years, any gender/race/ethnicity)  
+ - **Collection:** Scheduled blood draws for PK/PD, safety labs, HLA testing, and efficacy assessments at baseline, Month 3, 6, 9, 12, and 24  
+ - **Period:** Enrollment over 1.5 years; 24 months follow‑up; total study span ~3.5 years  
 
 *(Raw data are confidential and not included.)*
 
