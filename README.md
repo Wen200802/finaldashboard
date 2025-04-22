@@ -41,8 +41,8 @@ https://github.com/Wen200802/finaldashboard/
 ## ⚙️ Usage
 
 - Navigate to the **“Dataset Description”** tab to review study design and data collection protocol.  
-- Hover over any point in the main plot to see patient‑level metrics (arm, timepoint, eGFR, etc.).  
-- Use the legend toggles to filter by treatment arm.  
+- Hover over any point in the main plot to see patient‑level metrics (treatment group, timepoint, eGFR, etc.).  
+- Use the legend toggles to filter by treatment group.  
 
 ---
 
