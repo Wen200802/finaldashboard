@@ -1,0 +1,180 @@
+---
+title: "Final project 3a"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    runtime: shinyrmd
+    theme: 
+      bg: "#fff"
+      fg: "#000" 
+      primary: "#A991D4"
+  navbar:
+    right:
+    - text: "Source Code"
+    href: "https://github.com/Wen200802/finaldashboard"
+    target: "_blank"
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(plotly)
+library(DT)
+library(htmlwidgets)
+library(dplyr)
+```
+
+```{r, context="server", eval = FALSE, include=FALSE}
+library(bslib)
+bslib::bs_themer()
+```
+
+```{r, load_data}
+library(readr)
+gfrdata <- read.csv("~/documents/data555/gfr_ckd2_emory_norace.csv")
+```
+
+```{r, clean_data, include=FALSE}
+gfrdata$dfseqnew <- dplyr::recode(
+  gfrdata$dfseq,
+  `1`  = "Screening",
+  `3`  = "Month 0",
+  `4`  = "Month 0.5",
+  `5`  = "Month 1",
+  `6`  = "Month 1.5",
+  `7`  = "Month 2",
+  `8`  = "Month 2.5",
+  `9`  = "Month 3",
+  `10` = "Month 4",
+  `11` = "Month 5",
+  `12` = "Month 6",
+  `13` = "Month 7",
+  `14` = "Month 8",
+  `15` = "Month 9",
+  `16` = "Month 10",
+  `17` = "Month 11",
+  `18` = "Month 12",
+  `20` = "Month 15",
+  `23` = "Month 18",
+  `24` = "Month 21",
+  `28` = "Month 24"
+)
+
+time_levels <- c("Screening", "Month 0", "Month 0.5", "Month 1", "Month 1.5", "Month 2", "Month 2.5", "Month 3", "Month 4", "Month 5", "Month 6", "Month 7", "Month 8", "Month 9", "Month 10", "Month 11", "Month 12", "Month 15", "Month 18", "Month 21", "Month 24")
+
+gfrdata$dfseqnew <- factor(gfrdata$dfseqnew, levels = time_levels, ordered = TRUE)
+```
+
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Widget 1
+
+```{r}
+# Summarize eGFR by Study_drug and dfseq
+df_summary <- gfrdata %>%
+  group_by(randDrugText, dfseqnew) %>%
+  summarize(
+    mean_egfr = mean(gfr_calculated_ckd_emory_norace, na.rm = TRUE),
+    sd_egfr   = sd(gfr_calculated_ckd_emory_norace, na.rm = TRUE),
+    n         = n()
+  ) %>%
+  ungroup() %>%
+  mutate(
+    se_egfr = sd_egfr / sqrt(n),  # Standard error
+     mean_egfr = round(mean_egfr, 0)
+  )
+
+#rename
+df_summary <- df_summary %>%
+  dplyr::rename(DrugType = randDrugText,
+  TimePoint = dfseqnew,
+  MeaneGFR = mean_egfr)
+
+# Create a ggplot line chart
+p1 <- ggplot(df_summary, aes(x = TimePoint, y = MeaneGFR, 
+                             color = DrugType, group = DrugType,
+                             text = paste(
+    "Time Point:", TimePoint, "<br>",
+    "Mean eGFR:", MeaneGFR, "ml/min/1.73m2", "<br>",
+    "Drug Type:", DrugType
+  )
+  )) +
+  geom_line() +
+  geom_point() +
+  geom_errorbar(aes(ymin = MeaneGFR - se_egfr, ymax = MeaneGFR + se_egfr),
+                width = 0.2) +
+  labs(
+    title = "Mean eGFR Over Time by Drug Group",
+    x     = "Time Point",
+    y     = "Mean eGFR (ml/min/1.73m2)",
+    color  ="Drug Type"
+  ) +
+  theme_minimal() +
+     scale_color_manual(values = c(
+    "Abatacept"  = "#edaaf4",
+    "Belatacept" = "#7b63a2"  
+  ))
+
+# Convert to an interactive plotly object
+p1_plotly <- ggplotly(p1, tooltip = c("x", "y", "color")) %>%
+  layout(
+    xaxis = list(tickangle = 45)  # rotate x-axis labels in plotly
+  )
+p1_plotly
+```
+
+
+### Description
+This line chart with error bars displays how the average eGFR (ml/min/1.73m^2) changes from Screening to Month 24 for Abatacept (pink) and Belatacept (purple). At several time points, the Abatacept group appears to have slightly higher mean eGFR values than the Belatacept group, although the overlapping error bars suggest the differences may not be statistically significant. Overall, both groups show relatively stable eGFR levels over the course of the study, with only modest fluctuations at specific visits.
+
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Widget 2
+
+```{r}
+p2 <- ggplot(gfrdata, aes(x = dfseqnew, y = gfr_calculated_ckd_emory_norace, color = randDrugText, group = randDrugText
+  )) +
+  geom_boxplot(position = position_dodge()) +
+  labs(
+    title = "eGFR Distribution by Time and Drug Group",
+    x     = "Time Point",
+    y     = "eGFR  (ml/min/1.73m2)",
+    color  ="Drug Type"
+  ) +
+  theme_minimal() +
+   scale_color_manual(values = c(
+    "Abatacept"  = "#edaaf4",
+    "Belatacept" = "#7b63a2"  
+  ))
+
+p2_plotly <- ggplotly(p2) %>%
+  layout(
+    xaxis = list(tickangle = 45)  # rotate x-axis labels in plotly
+  )
+p2_plotly
+```
+
+
+### Description
+This boxplot illustrates the distribution of eGFR values across the same time points for Abatacept (pink) and Belatacept (purple). Both groups show comparable medians and interquartile ranges at most time points, though some variability and outliers are observed. The similar overall spread of eGFR indicates that neither drug group consistently diverges from the other in terms of kidney function throughout the study period.
+
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Dataset Description
+This confidential dataset comes from a prospective, intention‐to‐treat, randomized controlled clinical trial comparing abatacept conversion versus belatacept maintenance in kidney transplant recipients. A total of 86 adult first‐time renal transplant recipients (≥18 years old of any gender, race, or ethnicity) were enrolled and randomized 1:1. Data were collected at participating transplant centers via a clinical protocol involving scheduled blood draws for pharmacokinetic / pharmacodynamic studies, safety labs, HLA testing, and efficacy assessments at baseline and at3, 6, 9, 12, and 24 months. Enrollment was completed within 1.5 years, and participants were actively followed for 24 months post‐randomization, yielding data over a 3.5‑year study period.
+
+
+
+Row {data-height=100}
+-----------------------------------------------------------------------
+
+### Project Impact  
+This trial addresses a critical need to optimize immunosuppression in kidney transplant patients by directly comparing the safety and efficacy of abatacept conversion versus standard belatacept maintenance. Its findings will inform evidence‑based, cost‑effective guidelines to personalize therapy, improve long‑term graft survival, and minimize treatment‑related toxicity.
