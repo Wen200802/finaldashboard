@@ -1,14 +1,13 @@
 # Kidney Transplant Immunosuppression Dashboard
 
 A **flexdashboard** that compares the safety and efficacy of abatacept conversion versus standard belatacept maintenance in adult kidney transplant recipients.  
-**Live demo:** https://github.com/Wen200802/finaldashboard/  
 
 ---
 
 ## 📊 Live Dashboard
 
 Open the interactive dashboard here:  
-https://github.com/Wen200802/finaldashboard/  
+https://github.com/Wen200802/finaldashboard/blob/main/Final-project-4a.html  
 
 ---
 
